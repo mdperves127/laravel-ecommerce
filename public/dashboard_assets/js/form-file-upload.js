@@ -6,7 +6,7 @@ $(function() {
 			params: {
 				action: 'fileuploader'
 			},
-			maxfilesize: 1000000
+			maxfilesize: 2000000
 		});
 		
 		
