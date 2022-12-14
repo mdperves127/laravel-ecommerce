@@ -1,14 +1,14 @@
 @extends('layouts.dashboardApp')
 @section('dashboardContent')
 <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-    <div class="breadcrumb-title pe-3">Create Category</div>
+    <div class="breadcrumb-title pe-3">Edit Category</div>
     <div class="ps-3">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb mb-0 p-0">
                 <li class="breadcrumb-item"><a href="{{ route('dashboard.index') }}"><i class="bx bx-home-alt"></i></a>
                 </li>
                 <li class="breadcrumb-item"><a href="{{ route('dashboard.category.index') }}">Categories</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Create Category</li>
+                <li class="breadcrumb-item active" aria-current="page">Edit Category</li>
             </ol>
         </nav>
     </div>
@@ -25,35 +25,33 @@
         <div class="card border-top border-0 border-4 border-primary">
             <div class="card-body p-5">
                 <div class="card-title d-flex align-items-center">
-                    <h5 class="mb-0 text-primary">Create Category</h5>
+                    <h5 class="mb-0 text-primary">Edit Category</h5>
                 </div>
                 <hr>
-                <form class="row g-3" action="{{ route('dashboard.category.store') }}" method="POST" enctype="multipart/form-data">
+                <form class="row g-3" action="{{ route('dashboard.category.update', $data->id) }}" method="POST" enctype="multipart/form-data">
                     @csrf
-                    {{-- <div class="card-body">
-                        <label for="inputFirstName" class="form-label">Set Image*</label>
-                        <input id="fancy-file-upload" type="file" name="photo"
-                            accept=".jpg, .png, image/jpeg, image/png" class="ff_fileupload_hidden" required>
-                    </div> --}}
+                    @method('PATCH')
                     <div class="col-12">
                         <label for="inputFirstName" class="form-label">Photo</label>
                         <input type="file" name="photo" class="form-control">
+                        <br>
+                        <img width="50px;" src="{{ asset('assets/images') }}/{{ $data->photo }}" alt="{{ $data->photo }}">
                     </div>
                     <div class="col-12">
                         <label for="inputFirstName" class="form-label">Name</label>
-                        <input type="text" name="name" class="form-control item-name" placeholder="Enter Name">
+                        <input type="text" name="name" class="form-control item-name" placeholder="Enter Name" value="{{ $data->name }}">
                     </div>
                     <div class="col-12">
                         <label for="inputFirstName" class="form-label">Slug</label>
-                        <input type="text" name="slug" class="form-control" id="slug" placeholder="Enter Slug">
+                        <input type="text" name="slug" class="form-control" id="slug" placeholder="Enter Slug" value="{{ $data->slug }}">
                     </div>
                     <div class="col-12">
                         <label for="inputFirstName" class="form-label">Meta Keyword</label>
-                        <input type="text" name="meta_key" class="form-control tags" placeholder="Enter Meta Keywords">
+                        <input type="text" name="meta_key" class="form-control tags" placeholder="Enter Meta Keywords" value="{{ $data->meta_key }}">
                     </div>
                     <div class="col-12">
                         <label for="inputAddress" class="form-label">Meta Description</label>
-                        <textarea class="form-control" name="meta_description" placeholder="Enter Meta Description" rows="4"></textarea>
+                        <textarea class="form-control" name="meta_description" placeholder="Enter Meta Description" rows="4">{{ $data->meta_description }}</textarea>
                     </div>
                     <div class="col-12">
                         <button type="submit" class="btn btn-primary px-5">Submit</button>

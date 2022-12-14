@@ -20,27 +20,40 @@
 {{-- breadcrumb ends --}}
 <div class="card">
     <div class="card-body">
+        @include('alerts.alert')
         <div class="table-responsive">
             <table id="example" class="table table-striped table-bordered">
                 <thead>
-                    <tr>
+                    <tr class="text-center">
+                        <th>Photo</th>
                         <th>Name</th>
-                        <th>Position</th>
-                        <th>Office</th>
-                        <th>Age</th>
-                        <th>Start date</th>
-                        <th>Salary</th>
+                        <th>Status</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>Tiger Nixon</td>
-                        <td>System Architect</td>
-                        <td>Edinburgh</td>
-                        <td>61</td>
-                        <td>2011/04/25</td>
-                        <td>$320,800</td>
+                    @foreach ($datas as $data)
+                    <tr class="text-center">
+                        <td>
+                            <img width="50px;" src="{{ asset('assets/images') }}/{{ $data->photo }}" alt="{{ $data->photo }}">
+                        </td>
+                        <td>
+                            {{ $data->name }}
+                        </td>
+                        <td>
+                            data
+                        </td>
+                        <td>
+                            <a href="{{ route('dashboard.category.edit', $data->id) }}" class="btn btn-sm btn-primary"><i class="fa fa-regular fa-edit"></i></a>
+                            <a href="{{ route('dashboard.category.destroy', $data->id) }}" onclick="event.preventDefault(); document.getElementById('category-delete').submit();" class="btn btn-sm btn-danger"><i class="fas fa-regular fa-trash"></i></a>
+
+                            <form id="category-delete" action="{{ route('dashboard.category.destroy', $data->id) }}" method="POST" class="d-none">
+                                @csrf
+                                @method('DELETE')
+                            </form>
+                        </td>
                     </tr>
+                    @endforeach
                 </tbody>
             </table>
         </div>

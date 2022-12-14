@@ -4,14 +4,16 @@ namespace App\Http\Controllers\dashboard;
 
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
+use App\Repositories\CategoryRepository;
 use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
-    public function _construct()
+
+    public function __construct(CategoryRepository $repository)
     {
-//        $this->middleware('auth');
-        $this->repository = new CategoryRepository;
+        $this->repository = $repository;
     }
     /**
      * Display a listing of the resource.
@@ -20,9 +22,9 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        return view('dashboard.category.index');
+        $datas = Category::latest()->get();
+        return view('dashboard.category.index', compact('datas'));
     }
-
     /**
      * Show the form for creating a new resource.
      *
@@ -41,9 +43,13 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+            'name' => 'required|unique:categories,name',
+            'slug' => 'required|unique:categories,slug',
+            'photo' => 'required|image|mimes:jpeg,png,jpg,gif,svg',
+        ]);
         $this->repository->store($request);
-        $request->session()->flash('alert-success', "Category was successful added!");
-        return redirect()->route('category.index');
+        return redirect()->route('dashboard.category.index')->withSuccess('Category was successful added!');
     }
 
     /**
@@ -65,7 +71,8 @@ class CategoryController extends Controller
      */
     public function edit($id)
     {
-        //
+        $data = Category::find($id);
+        return view('dashboard.category.edit', compact('data'));
     }
 
     /**
@@ -75,9 +82,15 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Category $category)
     {
-        //
+        $request->validate([
+            'name' => 'required|unique:categories,name,'.$category->id,
+            'slug' => 'required|unique:categories,slug,'.$category->id,
+            'photo' => 'image|mimes:jpeg,png,jpg,gif,svg',
+        ]);
+        $this->repository->update($category, $request);
+        return redirect()->route('dashboard.category.index')->withSuccess('Category was successful updated!');
     }
 
     /**
@@ -86,8 +99,9 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Category $category)
     {
-        //
+        $this->repository->delete($category);
+        return redirect()->route('dashboard.category.index')->withSuccess('Category was successful deleted!');
     }
 }

@@ -21,8 +21,3 @@ $('.item-name').on('keyup', function () {
 
 });
 
-
-// Tagify
-if ($('.tags').length > 0) {
-    $('.tags').tagify();
-}

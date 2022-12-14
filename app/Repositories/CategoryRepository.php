@@ -2,30 +2,36 @@
 
 namespace App\Repositories;
 
+use App\Helpers\ImageHelper;
 use App\Models\Category;
 
 class CategoryRepository
 {
     public function store($request)
     {
-        $category = new Category();
-        $category->name = $request->name;
-        $category->save();
-        //update a image
-        
+        $input = $request->all();
+
+        if($request->has('meta_key')){
+            $input['meta_key'] = str_replace(["value", "{", "}", "[","]",":","\""], '', $request->meta_key);
+        }
+
+        $input['photo'] = ImageHelper::handleUploadedImage($request->file('photo'),'assets/images');
+
+        Category::create($input);
+
     }
-    public  function update($request, $id)
+    public  function update($category, $request)
     {
-        $category = Category::find($id);
-        $category->name = $request->name;
-        $category->save();
-
-        
-
+        $input = $request->all();
+        if ($file = $request->file('photo')) {
+            $input['photo'] = ImageHelper::handleUpdatedUploadedImage($file,'/assets/images',$category,'/assets/images/','photo');
+        }
+        $category->update($input);
     }
-    // public function delete($id)
-    // {
-    //     $category = Category::find($id);
-    //     $category->delete();
-    // }
+
+    public function delete($category)
+    {
+        ImageHelper::handleDeletedImage($category,'photo','assets/images/');
+        $category->delete();
+    }
 }

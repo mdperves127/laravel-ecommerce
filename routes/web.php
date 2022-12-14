@@ -47,6 +47,8 @@ Route::prefix('admin/dashboard')->middleware('auth')->group(function () {
 
 Route::prefix('admin/dashboard')->middleware('auth')->group(function () {
     Route::get('/', 'App\Http\Controllers\dashboard\DashboardController@index')->name('dashboard.index');
+    Route::get('/profile', 'App\Http\Controllers\dashboard\DashboardController@profile')->name('dashboard.profile');
+    Route::post('/profile', 'App\Http\Controllers\dashboard\DashboardController@profileUpdate')->name('dashboard.profile.update');
 });
 
 
